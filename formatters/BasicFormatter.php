@@ -171,7 +171,7 @@ class EchoBasicFormatter extends EchoNotificationFormatter {
 	 * @return array|string
 	 */
 	public function format( $event, $user, $type ) {
-		global $wgExtensionAssetsPath, $wgEchoNotificationIcons;
+		global $wgExtensionAssetsPath, $wgEchoNotificationIcons, $wgLang;
 
 		$this->setDistributionType( $type );
 		$this->applyChangeBeforeFormatting( $event, $user, $type );
@@ -192,7 +192,18 @@ class EchoBasicFormatter extends EchoNotificationFormatter {
 				// Fallback in case icon is not configured; mainly intended for 'site'
 				$iconInfo = $wgEchoNotificationIcons['placeholder'];
 			}
-			$iconUrl = "$wgExtensionAssetsPath/{$iconInfo['path']}";
+			if ( is_array( $iconInfo['path'] ) ) {
+				$dir = $wgLang->getDir();
+				if ( isset( $iconInfo['path'][$dir] ) ) {
+					$path = $iconInfo['path'][$dir];
+				} else {
+					wfDebugLog( 'Echo', "The \"{$this->icon}\" icon does not have anything set for $dir direction." );
+					$path = $wgEchoNotificationIcons['placeholder']['path']; // Fallback
+				}
+			} else {
+				$path = $iconInfo['path'];
+			}
+			$iconUrl = "$wgExtensionAssetsPath/$path";
 		}
 
 		// Assume html as the format for the notification
