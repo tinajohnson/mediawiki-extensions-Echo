@@ -791,7 +791,7 @@ class EchoHooks {
 	 */
 	static function getUnitTests( &$files ) {
 		// @codeCoverageIgnoreStart
-		$directoryIterator = new RecursiveDirectoryIterator( __DIR__ . '/tests/' );
+		$directoryIterator = new RecursiveDirectoryIterator( __DIR__ . '/tests/phpunit/' );
 
 		/**
 		 * @var SplFileInfo $fileInfo
